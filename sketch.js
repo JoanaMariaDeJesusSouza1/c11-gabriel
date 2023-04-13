@@ -1,58 +1,54 @@
-var trex ,trex_running;
-var solo,imagem_solo;
+var trex, trex_running, trex_collided;
+var ground, invisibleGround, groundImage;
 
-
-
-//preload carrega as midías
 function preload(){
-  //animação do Trex
-  trex_running = loadAnimation("trex1.png", "trex3.png", "trex4.png");
- 
-  //imagem do solo
-  imagem_solo = loadImage("ground2.png");
+  trex_running = loadAnimation("trex1.png","trex3.png","trex4.png");
+  trex_collided = loadImage("trex_collided.png");
+  
+  groundImage = loadImage("ground2.png")
 }
 
-
-//setup faz aconfiguração
-function setup(){
+function setup() {
   createCanvas(600,200);
-
+  
+  
+  //crie um sprite de trex
   trex = createSprite(50,160,20,50);
   trex.addAnimation("running", trex_running);
-  trex.scale = 0.5; 
-  trex.x=50;
-
-
-  solo =  createSprite(300,190,600,2)
-  //solo.addImage("solo", imagem_solo);
-  //solo.x = solo.width/2;
-
- 
-}
-//draw faz o movimento, a ação do jogo
-function draw(){
-  background("gray");
-
-  solo.velocityX = -10
+  trex.scale = 0.5;
+  
+  //crie um sprite ground (solo)
+  ground = createSprite(300,180,600,2);
+  ground.addImage("ground",groundImage);
+  ground.x = ground.width /2;
 
   
-  if(keyDown("space")){
+  //crie um solo invisível
+  invisibleGround = createSprite(200,190,600,2);
+  invisibleGround.visible = false;
+  
+}
+
+function draw() {
+  //definir cor de fundo
+  background(220);
+  ground.velocityX = -4;
+  console.log(trex.y)
+  
+  //pular quando tecla espaço for pressionada
+  if(keyDown("space") && trex.y >= 100) {
     trex.velocityY = -10;
   }
-
- //criando a gravidade
-  trex.velocityY += 0.5; 
-
-
-     
- //coordenadas do mouse na tela
-   text("X: "+mouseX+"  / Y: "+mouseY,mouseX,mouseY);
-
-  //colisão do trex com as bordas
-  trex.collide(solo);
-
+  
+  //adicionar gravidade
+  trex.velocityY = trex.velocityY + 0.8
+  
+  if (ground.x < 0){
+    ground.x = ground.width/2;
+  }
+  
+  //impedir que o trex caia
+  trex.collide(invisibleGround);
   
   drawSprites();
-
 }
-
